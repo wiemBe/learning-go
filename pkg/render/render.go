@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/wiemBe/learning-go/pkg/config"
+	"github.com/wiemBe/learning-go/pkg/handlers"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,9 +17,15 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	// create a template cache
-	templateCache := app.TemplateCache
+func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *handlers.TemplateData) {
+	var templateCache map[string]*template.Template
+	if app.UseCache {
+		// create a template cache
+		templateCache = app.TemplateCache
+	} else {
+		templateCache, _ = CreateTemplateCache()
+
+	}
 	// get request from cache
 
 	t, ok := templateCache[tmpl]
