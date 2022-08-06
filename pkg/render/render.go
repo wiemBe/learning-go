@@ -44,12 +44,16 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
 func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
+	// get all templates
 	pages, err := filepath.Glob("./templates/*.html")
 	if err != nil {
 		return myCache, err
 	}
+	// range through it
 	for _, page := range pages {
+		// it gets rid of the ./ stuff and gives you file name
 		name := filepath.Base(page)
+		// ts = template set
 		ts, err := template.New(name).ParseFiles(page)
 		if err != nil {
 			return myCache, err
@@ -59,7 +63,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 			return myCache, err
 		}
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("./templates/*html")
+			ts, err = ts.ParseGlob("./templates/*.html")
 			if err != nil {
 				return myCache, err
 			}
