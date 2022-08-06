@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/wiemBe/learning-go/pkg/config"
-	"github.com/wiemBe/learning-go/pkg/handlers"
+	"github.com/wiemBe/learning-go/pkg/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -17,7 +17,11 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *handlers.TemplateData) {
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
+func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *models.TemplateData) {
 	var templateCache map[string]*template.Template
 	if app.UseCache {
 		// create a template cache
@@ -33,8 +37,9 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *handlers.T
 		log.Fatal("could not get template from cache")
 	}
 	buff := new(bytes.Buffer)
+	templateData = AddDefaultData(templateData)
 
-	_ = t.Execute(buff, nil)
+	_ = t.Execute(buff, templateData)
 	// render template
 
 	_, err := buff.WriteTo(w)

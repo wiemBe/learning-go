@@ -2,23 +2,12 @@ package handlers
 
 import (
 	"github.com/wiemBe/learning-go/pkg/config"
+	"github.com/wiemBe/learning-go/pkg/models"
 	"github.com/wiemBe/learning-go/pkg/render"
 	"net/http"
 )
 
 var Repo *Repository
-
-// TemplateData holds  data sent from handlers
-type TemplateData struct {
-	StringMap map[string]string
-	IntMap    map[string]int
-	FloatMap  map[string]float32
-	Data      map[string]interface{}
-	CSRFToken string
-	Flash     string
-	Warning   string
-	Error     string
-}
 
 type Repository struct {
 	App *config.AppConfig
@@ -38,7 +27,7 @@ func NewHandlers(r *Repository) {
 
 // Home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.html", &TemplateData{})
+	render.RenderTemplate(w, "home.html", &models.TemplateData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +36,7 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap["hello"] = "there"
 
 	// send data to template
-	render.RenderTemplate(w, "about.html", &TemplateData{
+	render.RenderTemplate(w, "about.html", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
